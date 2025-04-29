@@ -43,7 +43,7 @@ jobs:
 
     strategy:
       matrix:
-        include:          
+        include:
           - build: 'avx2-x64-nucci'
             defines: '-DCMAKE_CXX_FLAGS_RELEASE="/Ox /Ob3 /Oi /DNDEBUG /arch:AVX2 /fp:fast /MD /GL" -DCMAKE_C_FLAGS_RELEASE="/Ox /Ob3 /Oi /DNDEBUG /arch:AVX2 /fp:fast /MD /GL" -DCMAKE_EXE_LINKER_FLAGS_RELEASE="/LTCG" -DCMAKE_SHARED_LINKER_FLAGS_RELEASE="/LTCG" -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DLLAMA_CURL=OFF -DGGML_ENABLE_SPLIT_MODE=ON -DGGML_SCHED_MAX_COPIES=16 -DGGML_F32=ON -DGGML_F16=ON -DGGML_QUANTIZATION=ON -DGGML_AVX512=OFF -DGGML_AVX2=ON -DGGML_AVX=ON -DGGML_FMA=ON -DGGML_OPENMP=ON -DGGML_NATIVE=ON -DGGML_THREADS=16 -DGGML_CUBLAS=ON -DGGML_PERF=OFF -DGGML_DEBUG=OFF -DGGML_STATIC=OFF -DGGML_LTO=ON'
 
@@ -264,8 +264,8 @@ jobs:
           CURL_PATH: ${{ steps.get_libcurl.outputs.curl_path }}
         run: |
           call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-          cmake -S . -B build -G "Ninja Multi-Config" ^            
-            -DGGML_NATIVE=OFF ^                        
+          cmake -S . -B build -G "Ninja Multi-Config" ^
+            -DGGML_NATIVE=OFF ^
             -DGGML_CUDA=ON ^
             -DCMAKE_CUDA_ARCHITECTURES="89" ^
             -DGGML_CUDA_FORCE_MMQ=OFF ^
