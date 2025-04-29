@@ -44,7 +44,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - build: 'avx2-x64-nucci'
+          - build: 'avx2-x64'
             defines: '-DCMAKE_CXX_FLAGS_RELEASE="/Ox /Ob3 /Oi /DNDEBUG /arch:AVX2 /fp:fast /MD /GL" -DCMAKE_C_FLAGS_RELEASE="/Ox /Ob3 /Oi /DNDEBUG /arch:AVX2 /fp:fast /MD /GL" -DCMAKE_EXE_LINKER_FLAGS_RELEASE="/LTCG" -DCMAKE_SHARED_LINKER_FLAGS_RELEASE="/LTCG" -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DLLAMA_CURL=OFF -DGGML_ENABLE_SPLIT_MODE=ON -DGGML_SCHED_MAX_COPIES=16 -DGGML_F32=ON -DGGML_F16=ON -DGGML_QUANTIZATION=ON -DGGML_AVX512=OFF -DGGML_AVX2=ON -DGGML_AVX=ON -DGGML_FMA=ON -DGGML_OPENMP=ON -DGGML_NATIVE=ON -DGGML_THREADS=16 -DGGML_CUBLAS=ON -DGGML_PERF=OFF -DGGML_DEBUG=OFF -DGGML_STATIC=OFF -DGGML_LTO=ON'
 
     steps:
@@ -202,7 +202,7 @@ jobs:
 
     strategy:
       matrix:
-        cuda: ['12.4']
+        cuda: ['12.4','12.6']
         build: ['cuda']
 
     steps:
@@ -247,6 +247,35 @@ jobs:
           echo "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.4\libnvvp" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
           echo "CUDA_PATH=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.4" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
           echo "CUDA_PATH_V12_4=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.4" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+      
+      - name: Install Cuda Toolkit 12.6
+        if: ${{ matrix.cuda == '12.6' }}
+        run: |
+          mkdir -p "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.6"
+          choco install unzip -y
+          curl -O "https://developer.download.nvidia.com/compute/cuda/redist/cuda_cudart/windows-x86_64/cuda_cudart-windows-x86_64-12.6.77-archive.zip"
+          curl -O "https://developer.download.nvidia.com/compute/cuda/redist/cuda_nvcc/windows-x86_64/cuda_nvcc-windows-x86_64-12.6.85-archive.zip"
+          curl -O "https://developer.download.nvidia.com/compute/cuda/redist/cuda_nvrtc/windows-x86_64/cuda_nvrtc-windows-x86_64-12.6.77-archive.zip"
+          curl -O "https://developer.download.nvidia.com/compute/cuda/redist/libcublas/windows-x86_64/libcublas-windows-x86_64-12.6.4.1-archive.zip"
+          curl -O "https://developer.download.nvidia.com/compute/cuda/redist/cuda_nvtx/windows-x86_64/cuda_nvtx-windows-x86_64-12.6.77-archive.zip"
+          curl -O "https://developer.download.nvidia.com/compute/cuda/redist/cuda_profiler_api/windows-x86_64/cuda_profiler_api-windows-x86_64-12.6.77-archive.zip"
+          curl -O "https://developer.download.nvidia.com/compute/cuda/redist/visual_studio_integration/windows-x86_64/visual_studio_integration-windows-x86_64-12.6.77-archive.zip"
+          curl -O "https://developer.download.nvidia.com/compute/cuda/redist/cuda_nvprof/windows-x86_64/cuda_nvprof-windows-x86_64-12.6.80-archive.zip"
+          curl -O "https://developer.download.nvidia.com/compute/cuda/redist/cuda_cccl/windows-x86_64/cuda_cccl-windows-x86_64-12.6.77-archive.zip"
+          unzip '*.zip' -d "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.6"
+          xcopy "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.6\cuda_cudart-windows-x86_64-12.6.77-archive\*" "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.6" /E /I /H /Y
+          xcopy "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.6\cuda_nvcc-windows-x86_64-12.6.85-archive\*" "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.6" /E /I /H /Y
+          xcopy "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.6\cuda_nvrtc-windows-x86_64-12.6.77-archive\*" "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.6" /E /I /H /Y
+          xcopy "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.6\libcublas-windows-x86_64-12.6.4.1-archive\*" "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.6" /E /I /H /Y
+          xcopy "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.6\cuda_nvtx-windows-x86_64-12.6.77-archive\*" "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.6" /E /I /H /Y
+          xcopy "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.6\cuda_profiler_api-windows-x86_64-12.6.77-archive\*" "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.6" /E /I /H /Y
+          xcopy "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.6\visual_studio_integration-windows-x86_64-12.6.77-archive\*" "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.6" /E /I /H /Y
+          xcopy "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.6\cuda_nvprof-windows-x86_64-12.6.80-archive\*" "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.6" /E /I /H /Y
+          xcopy "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.6\cuda_cccl-windows-x86_64-12.6.77-archive\*" "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.6" /E /I /H /Y
+          echo "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.6\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          echo "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.6\libnvvp" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          echo "CUDA_PATH=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.6" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          echo "CUDA_PATH_V12_6=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.6" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
 
       - name: Install Ninja
         id: install_ninja
